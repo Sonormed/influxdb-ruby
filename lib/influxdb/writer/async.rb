@@ -35,7 +35,8 @@ module InfluxDB
                     :max_post_points,
                     :max_queue_size,
                     :num_worker_threads,
-                    :sleep_interval
+                    :sleep_interval,
+                    :debug_log
 
         include InfluxDB::Logging
 
@@ -52,6 +53,7 @@ module InfluxDB
           @max_queue_size     = config.fetch(:max_queue_size,     MAX_QUEUE_SIZE)
           @num_worker_threads = config.fetch(:num_worker_threads, NUM_WORKER_THREADS)
           @sleep_interval     = config.fetch(:sleep_interval,     SLEEP_INTERVAL)
+          @debug_log          = config.fetch(:debug_log, true)
 
           @queue = InfluxDB::MaxQueue.new max_queue_size
 
@@ -110,7 +112,7 @@ module InfluxDB
               log :debug, "Found data in the queue! (#{data.length} points)"
               client.write(data.join("\n"), nil)
             rescue => e
-              puts "Cannot write data: #{e.inspect}"
+              log :info, "Cannot write data: #{e.inspect}"
             end
 
             break if queue.length > max_post_points

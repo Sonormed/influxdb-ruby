@@ -32,7 +32,6 @@ module InfluxDB
       extract_database_options!(opts)
       extract_writer_options!(opts)
       extract_query_options!(opts)
-
       configure_retry! opts.fetch(:retry, nil)
       configure_hosts! opts[:hosts] || opts[:host] || "localhost".freeze
     end

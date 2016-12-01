@@ -17,6 +17,7 @@ module InfluxDB
 
     def log(level, message)
       return unless InfluxDB::Logging.logger
+      return if respond_to?(:debug_log) && !debug_log
       InfluxDB::Logging.logger.send(level.to_sym, PREFIX) { message }
     end
   end
